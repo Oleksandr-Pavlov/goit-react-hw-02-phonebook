@@ -4,6 +4,8 @@ import { Form } from './Form/Form';
 import { Filter } from './Filter/Filter';
 import { nanoid } from 'nanoid';
 
+const LS_KEY = 'contacts_list'
+
 export class App extends Component {
   state = {
     contacts: [
@@ -12,19 +14,21 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    filter: '',
+    filteredName: '',
   };
 
   onChangeFilter = e => {
     const { value } = e.currentTarget;
-    this.setState({ filter: value });
+    this.setState({ filteredName: value });
   };
 
   getFilteredContacts = () => {
-    const {contacts, filter} = this.state
-    const normalizedFilter = filter.toLowerCase();
+    const {contacts, filteredName} = this.state
+    const normalizedFilteredName = filteredName.toLowerCase();
 
-    return contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilteredName)
+    );
   };
 
   handleSubmit = (name, number) => {
@@ -35,10 +39,8 @@ export class App extends Component {
     if (isExist) return alert(`${name} is already in contacts.`);
 
     this.setState(prevState => ({
-      contacts: [...prevState.contacts, { name, id: nanoid(), number }],
+      contacts: [...prevState.contacts, { id: nanoid(), name,  number }],
     }));
-
-    this.setState({ name: '', number: '' });
   };
 
   deleteContact = contactId => {
@@ -46,6 +48,19 @@ export class App extends Component {
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem(LS_KEY)
+    const parsedContacts = JSON.parse(contacts)
+
+    parsedContacts && this.setState({contacts: parsedContacts})
+  }
+  
+  componentDidUpdate(prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const filteredContacts = this.getFilteredContacts();
