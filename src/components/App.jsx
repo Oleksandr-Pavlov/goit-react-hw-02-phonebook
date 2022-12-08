@@ -4,7 +4,7 @@ import { Form } from './Form/Form';
 import { Filter } from './Filter/Filter';
 import { nanoid } from 'nanoid';
 
-const LS_KEY = 'contacts_list'
+// const LS_KEY = 'contacts_list'
 
 export class App extends Component {
   state = {
@@ -49,18 +49,18 @@ export class App extends Component {
     }));
   };
 
-  componentDidMount() {
-    const contacts = localStorage.getItem(LS_KEY)
-    const parsedContacts = JSON.parse(contacts)
+  // componentDidMount() {
+  //   const contacts = localStorage.getItem(LS_KEY)
+  //   const parsedContacts = JSON.parse(contacts)
 
-    parsedContacts && this.setState({contacts: parsedContacts})
-  }
+  //   parsedContacts && this.setState({contacts: parsedContacts})
+  // }
   
-  componentDidUpdate(prevState) {
-    if (prevState.contacts !== this.state.contacts) {
-      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
-    }
-  }
+  // componentDidUpdate(prevState) {
+  //   if (prevState.contacts !== this.state.contacts) {
+  //     localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+  //   }
+  // }
 
   render() {
     return (
